@@ -1195,6 +1195,10 @@ const runAnalysis = async () => {
 
   const copyText = t => { try { navigator.clipboard.writeText(t); } catch (e) { } };
 
+  function removeMedia(index) {
+    setMediaFiles(prev => prev.filter((_, i) => i !== index));
+  }
+
   const STEPS = ["İşletme", "Bütçe & Platform", "Hedef Kitle", "Reklam İçeriği"];
 
   return (
