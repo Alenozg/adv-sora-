@@ -1,10 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { Anthropic } = require('@anthropic-ai/sdk');
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -14,7 +15,6 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-// List available Gemini models for debugging
 app.get('/gemini-models', async (req, res) => {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return res.json({ error: 'No GEMINI_API_KEY' });
@@ -29,7 +29,6 @@ app.get('/gemini-models', async (req, res) => {
 async function callGemini(system, messages, maxTokens) {
   const key = process.env.GEMINI_API_KEY;
   
-  // Try multiple models + API versions
   const attempts = [
     { model: 'gemini-3-flash-preview', ver: 'v1beta' },
     { model: 'gemini-2.5-flash',       ver: 'v1beta' },
@@ -42,7 +41,6 @@ async function callGemini(system, messages, maxTokens) {
   for (const { model, ver } of attempts) {
     const url = `https://generativelanguage.googleapis.com/${ver}/models/${model}:generateContent?key=${key}`;
     
-    // Build contents
     const lastMsg = messages[messages.length - 1];
     let parts;
     if (Array.isArray(lastMsg.content)) {
@@ -110,7 +108,6 @@ app.post('/api/claude', async (req, res) => {
       return res.json(data);
     }
 
-    // Claude
     if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(500).json({ error: { message: '❌ ANTHROPIC_API_KEY eksik.' } });
     }
@@ -136,9 +133,16 @@ app.post('/api/claude', async (req, res) => {
   }
 });
 
+// Serve built React app
+const distPath = path.join(__dirname, '..', 'dist');
+app.use(express.static(distPath));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+
 app.listen(port, () => {
-  console.log(`\n🚀 AdVisorAI Proxy — http://localhost:${port}`);
+  console.log(`\n🚀 AdVisorAI — http://localhost:${port}`);
   console.log(`   Claude: ${process.env.ANTHROPIC_API_KEY ? '✅' : '❌ eksik'}`);
   console.log(`   Gemini: ${process.env.GEMINI_API_KEY    ? '✅' : '❌ eksik'}`);
-  console.log(`   Mevcut modelleri görmek için: http://localhost:${port}/gemini-models\n`);
+  console.log(`   PORT: ${port}\n`);
 });
