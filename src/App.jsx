@@ -150,7 +150,7 @@ Bu görseli/videoyu aşağıdaki kriterlere göre analiz et ve SADECE JSON dönd
   "abTestIdea": "<bu görsele karşı test edilecek alternatif konsept fikri>"
 }`;
 
-  const response = await fetch("http://localhost:3001/api/claude", {
+  const response = await fetch("/api/claude", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -188,7 +188,7 @@ async function searchCompetitorAds(service, country, limit) {
     + "Kazanan formatlar, hooklar, firsatlar, onerilen strateji (baslik+metin+cta+gorsel). "
     + "JSON: {service,country,advertisers:[{rank,name,estimatedBudget,adFormats,headline,body,cta,targeting,daysActive,adAngle}],insights:{topFormat,hooks,gaps},strategy:{headline,primaryText,cta,visual,why},adLibUrl}";
 
-  const response = await fetch("http://localhost:3001/api/claude", {
+  const response = await fetch("/api/claude", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -218,7 +218,7 @@ async function searchCompetitorAds(service, country, limit) {
 
 // ─── STRATEGY ADVISOR — 2-Tier: Sonnet (ozet) + Haiku (metin) ──────
 async function callModel(model, systemPrompt, userMsg, tokens, _label, provider) {
-  const resp = await fetch("http://localhost:3001/api/claude", {
+  const resp = await fetch("/api/claude", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ model: provider || window.__selectedModel || "claude", claudeModel: model, max_tokens: tokens, system: systemPrompt, messages: [{ role: "user", content: userMsg }] })
@@ -2485,7 +2485,7 @@ const runAnalysis = async () => {
                           "📊 Viral Potansiyel: [Neden viral olur?]",
                         ].filter(Boolean).join(" ");
 
-                        const resp = await fetch("http://localhost:3001/api/claude", {
+                        const resp = await fetch("/api/claude", {
                           method: "POST",
                           headers: {"Content-Type":"application/json"},
                           body: JSON.stringify({
@@ -2705,7 +2705,7 @@ const runAnalysis = async () => {
                     } else {
                       userContent.push({ type: "text", text: "Bu reklam gorseli icin tam sablona gore profesyonel analiz raporu olustur." });
                     }
-                    const resp = await fetch("http://localhost:3001/api/claude", {
+                    const resp = await fetch("/api/claude", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({
@@ -2929,7 +2929,7 @@ const runAnalysis = async () => {
                           userContent = txtParts;
                         }
 
-                        const resp = await fetch("http://localhost:3001/api/claude", {
+                        const resp = await fetch("/api/claude", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({
@@ -3177,7 +3177,7 @@ const runAnalysis = async () => {
 
                         var resp;
                         try {
-                          resp = await fetch("http://localhost:3001/api/claude", {
+                          resp = await fetch("/api/claude", {
                             method: "POST",
                             signal: controller.signal,
                             headers: { "Content-Type": "application/json" },
@@ -3415,7 +3415,7 @@ const runAnalysis = async () => {
                     const b64Parts = imgData.split(",");
                     const b64MediaType = (b64Parts[0].match(/data:([^;]+);/) || ["","image/jpeg"])[1];
                     const b64 = b64Parts[1];
-                    const resp = await fetch("http://localhost:3001/api/claude", {
+                    const resp = await fetch("/api/claude", {
                       method: "POST",
                       headers: {"Content-Type":"application/json"},
                       body: JSON.stringify({
@@ -3703,7 +3703,7 @@ const runAnalysis = async () => {
                         errNote ? "Kullanıcının notu: " + errNote : "",
                       ].filter(Boolean).join(" ");
 
-                      const resp = await fetch("http://localhost:3001/api/claude", {
+                      const resp = await fetch("/api/claude", {
                         method: "POST",
                         headers: {"Content-Type":"application/json"},
                         body: JSON.stringify({
