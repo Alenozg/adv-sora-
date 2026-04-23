@@ -1030,7 +1030,7 @@ export default function AdVisorAI() {
         if (s.crProduct)     setCrProduct(s.crProduct);
         if (s.crVibe)        setCrVibe(s.crVibe);
         if (s.crAudience)    setCrAudience(s.crAudience);
-        if (s.step !== undefined) setStep(s.step);
+        if (s.step !== undefined && s.step < 4) setStep(s.step);
         if (s.activeTab)     setActiveTab(s.activeTab);
       }
     } catch(e) { console.warn("LocalStorage yükleme hatası:", e); }
@@ -1046,7 +1046,7 @@ export default function AdVisorAI() {
         viralRes, viralProd, viralTone,
         hooksRes, repResult, auditResult, crResult,
         crProduct, crVibe, crAudience,
-        abSector, step, activeTab,
+        abSector, step: step < 4 ? step : 0, activeTab,
         errNote, errResult,
       };
       localStorage.setItem("advisorai_session", JSON.stringify(toSave));
